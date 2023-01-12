@@ -39,13 +39,6 @@ func storage_(key: Uint256) -> (value: Uint256) {
 func is_initialized_() -> (res: felt) {
 }
 
-// An event emitted whenever kakarot deploys a evm contract
-// evm_contract_address is the representation of the evm address of the contract
-// starknet_contract_address if the starknet address of the contract
-@event
-func evm_contract_deployed(evm_contract_address: felt, starknet_contract_address: felt) {
-}
-
 namespace ContractAccount {
     // Define the number of bytes per felt. Above 16, the following code won't work as it uses unsigned_div_rem
     // which is bounded by RC_BOUND = 2 ** 128 ~ uint128 ~ bytes16
@@ -98,11 +91,6 @@ namespace ContractAccount {
         // TODO: Use RLP to compute proper EVM address, see https://www.evm.codes/#f0
         let (_, low) = split_felt(starknet_contract_address);
         local evm_contract_address = 0xAbdE100700000000000000000000000000000000 + low;
-
-        evm_contract_deployed.emit(
-            evm_contract_address=evm_contract_address,
-            starknet_contract_address=starknet_contract_address,
-        );
 
         // Save address of new contracts
         let (reg_address) = registry_address.read();
